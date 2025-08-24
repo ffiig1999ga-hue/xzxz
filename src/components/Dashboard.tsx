@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, DollarSign, CheckCircle, AlertCircle } from "lucide-react";
@@ -19,11 +19,8 @@ export const Dashboard = () => {
   });
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchStats();
-  }, []);
-
-  const fetchStats = async () => {
+  const fetchStats = useCallback(async () => {
+    setLoading(true);
     try {
       const { data: customers, error } = await supabase
         .from('cardinfo')
@@ -47,7 +44,11 @@ export const Dashboard = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchStats();
+  }, [fetchStats]);
 
   const StatCard = ({ title, value, icon: Icon, className = "" }: {
     title: string;
@@ -55,7 +56,7 @@ export const Dashboard = () => {
     icon: any;
     className?: string;
   }) => (
-    <Card className={`hover-scale transition-all duration-300 ${className}`}>
+    <Card className={`hover-scale transition-all duration-300 opacity-100 ${className}`}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium text-muted-foreground">
           {title}
@@ -86,7 +87,7 @@ export const Dashboard = () => {
   }
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-6 animate-fade-in opacity-100">
       <h2 className="text-3xl font-bold text-center mb-8">لوحة التحكم</h2>
       
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -94,30 +95,30 @@ export const Dashboard = () => {
           title="إجمالي العملاء"
           value={stats.totalCustomers}
           icon={Users}
-          className="animate-fade-in"
+          className="animate-fade-in opacity-100"
         />
         <StatCard
           title="العملاء المدفوعون"
           value={stats.paidCustomers}
           icon={CheckCircle}
-          className="animate-fade-in border-green-200 bg-green-50"
+          className="animate-fade-in border-green-200 bg-green-50 opacity-100"
         />
         <StatCard
           title="التجديدات المكتملة"
           value={stats.renewedCustomers}
           icon={AlertCircle}
-          className="animate-fade-in border-blue-200 bg-blue-50"
+          className="animate-fade-in border-blue-200 bg-blue-50 opacity-100"
         />
         <StatCard
           title="إجمالي الإيرادات"
           value={`${stats.totalRevenue.toLocaleString()} جنيه`}
           icon={DollarSign}
-          className="animate-fade-in border-yellow-200 bg-yellow-50"
+          className="animate-fade-in border-yellow-200 bg-yellow-50 opacity-100"
         />
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
-        <Card className="animate-scale-in">
+        <Card className="animate-scale-in opacity-100">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <CheckCircle className="h-5 w-5 text-green-500" />
@@ -136,7 +137,7 @@ export const Dashboard = () => {
           </CardContent>
         </Card>
 
-        <Card className="animate-scale-in">
+        <Card className="animate-scale-in opacity-100">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <AlertCircle className="h-5 w-5 text-blue-500" />

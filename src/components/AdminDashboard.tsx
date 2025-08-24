@@ -9,7 +9,7 @@ import { BarChart3, Users, Plus } from "lucide-react";
 interface Customer {
   id: number;
   customer_name: string;
-  mobile_number: number;
+  mobile_number: string;
   line_type: number;
   charging_date: string | null;
   renewal_date: string | null;
@@ -24,6 +24,7 @@ export const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [showForm, setShowForm] = useState(false);
   const [editingCustomer, setEditingCustomer] = useState<Customer | null>(null);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const handleAddCustomer = () => {
     setEditingCustomer(null);
@@ -39,6 +40,7 @@ export const AdminDashboard = () => {
   const handleSaveCustomer = () => {
     setShowForm(false);
     setEditingCustomer(null);
+    setRefreshKey(prev => prev + 1); // إجبار إعادة تحميل البيانات
   };
 
   const handleCancelForm = () => {
@@ -64,11 +66,12 @@ export const AdminDashboard = () => {
           </div>
 
           <TabsContent value="dashboard" className="mt-8">
-            <Dashboard />
+            <Dashboard key={`dashboard-${refreshKey}`} />
           </TabsContent>
 
           <TabsContent value="customers" className="mt-8">
             <CustomerTable 
+              key={`customers-${refreshKey}`}
               onAddCustomer={handleAddCustomer}
               onEditCustomer={handleEditCustomer}
             />

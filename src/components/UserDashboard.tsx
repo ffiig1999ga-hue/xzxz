@@ -8,7 +8,7 @@ import { Phone, Calendar, Wifi } from "lucide-react";
 interface Customer {
   id: number;
   customer_name: string;
-  mobile_number: number;
+  mobile_number: string;
   line_type: number;
   charging_date: string | null;
   renewal_date: string | null;
@@ -39,7 +39,7 @@ export const UserDashboard = ({ userType, username }: UserDashboardProps) => {
         query = query.eq('customer_name', username);
       } else if (userType === "single") {
         // For single user, filter by mobile number
-        query = query.eq('mobile_number', parseInt(username));
+        query = query.eq('mobile_number', username);
       }
 
       const { data, error } = await query;

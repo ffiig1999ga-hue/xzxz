@@ -9,7 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 interface Customer {
   id: number;
   customer_name: string;
-  mobile_number: number;
+  mobile_number: string;
   line_type: number;
   charging_date: string | null;
   renewal_date: string | null;
@@ -56,6 +56,10 @@ export const CustomerTable = ({ onAddCustomer, onEditCustomer }: CustomerTablePr
   };
 
   const deleteCustomer = async (id: number) => {
+    if (!confirm('هل أنت متأكد من حذف هذا العميل؟')) {
+      return;
+    }
+
     try {
       const { error } = await supabase
         .from('cardinfo')
@@ -79,6 +83,14 @@ export const CustomerTable = ({ onAddCustomer, onEditCustomer }: CustomerTablePr
     }
   };
 
+  const handleEditCustomer = (customer: Customer) => {
+    // تحويل mobile_number إلى string إذا كان number
+    const customerToEdit = {
+      ...customer,
+      mobile_number: String(customer.mobile_number)
+    };
+    onEditCustomer(customerToEdit);
+  };
   const getPaymentStatusBadge = (status: string) => {
     if (status === 'paid' || status === 'دفع') {
       return <Badge variant="default" className="bg-green-500 hover:bg-green-600">دفع</Badge>;
@@ -226,7 +238,7 @@ export const CustomerTable = ({ onAddCustomer, onEditCustomer }: CustomerTablePr
                     <Button
                       variant="outline"
                       size="icon"
-                      onClick={() => onEditCustomer(customer)}
+                      onClick={() => handleEditCustomer(customer)}
                       className="h-8 w-8 hover-scale"
                     >
                       <Edit className="h-4 w-4" />

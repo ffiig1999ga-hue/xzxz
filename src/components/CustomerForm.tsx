@@ -11,7 +11,7 @@ import { Save, X } from "lucide-react";
 interface Customer {
   id?: number;
   customer_name: string;
-  mobile_number: number;
+  mobile_number: string;
   line_type: number;
   charging_date: string | null;
   payment_status: string;
@@ -28,8 +28,8 @@ interface CustomerFormProps {
 export const CustomerForm = ({ customer, onSave, onCancel }: CustomerFormProps) => {
   const [formData, setFormData] = useState({
     customer_name: customer?.customer_name || '',
-    mobile_number: customer?.mobile_number ? String(customer.mobile_number) : '',
-    line_type: customer?.line_type ? String(customer.line_type) : '40',
+    mobile_number: customer?.mobile_number || '',
+    line_type: customer?.line_type ? String(customer.line_type) : '20',
     charging_date: customer?.charging_date || '',
     payment_status: customer?.payment_status || 'لم يدفع',
     monthly_price: customer?.monthly_price ? String(customer.monthly_price) : '',
@@ -45,7 +45,7 @@ export const CustomerForm = ({ customer, onSave, onCancel }: CustomerFormProps) 
     try {
       const dataToSave = {
         customer_name: formData.customer_name,
-        mobile_number: formData.mobile_number ? Number(formData.mobile_number) : null,
+        mobile_number: formData.mobile_number ? parseInt(formData.mobile_number) : null,
         line_type: formData.line_type ? Number(formData.line_type) : null,
         charging_date: formData.charging_date || null,
         payment_status: formData.payment_status,
@@ -138,10 +138,9 @@ export const CustomerForm = ({ customer, onSave, onCancel }: CustomerFormProps) 
                     <SelectValue placeholder="اختر نوع الخط" />
                   </SelectTrigger>
                   <SelectContent>
+                    <SelectItem value="20">20 جيجا</SelectItem>
                     <SelectItem value="40">40 ميجا</SelectItem>
-                    <SelectItem value="50">50 ميجا</SelectItem>
-                    <SelectItem value="100">100 ميجا</SelectItem>
-                    <SelectItem value="200">200 ميجا</SelectItem>
+                    <SelectItem value="60">60 جيجا</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
